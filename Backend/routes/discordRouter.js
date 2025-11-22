@@ -55,4 +55,6 @@ discordRouter.get("/getUsers", discordController.getUsers);
 
 discordRouter.get("/getChats", discordController.getChats);
 
+discordRouter.post("/newChat", discordController.newChat);
+
 module.exports = discordRouter;

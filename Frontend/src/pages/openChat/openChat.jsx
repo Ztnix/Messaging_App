@@ -1,34 +1,13 @@
 import profDefImg from "../../assets/profDef.jpg";
 import disImg from "../../assets/dis.png";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function OpenChat({ selectedChat }) {
-  const selected = {
-    name: "Lia",
-    username: "lialialia@hotmail.com",
-    message: "Hey!",
-    date: "1 day ago",
-    seen: true,
-  };
+  const selected = selectedChat.users[1];
 
-  const user = "Max";
+  const { user } = useAuth();
 
-  const messages = [
-    { author: "Lia", seen: true, message: "Hey!", date: "02/11/2025" },
-    { author: "Max", seen: false, message: "Call me", date: "28/10/2025" },
-    { author: "Lia", seen: true, message: "Got it", date: "30/10/2025" },
-    { author: "Max", seen: false, message: "On my way", date: "01/11/2025" },
-    { author: "Lia", seen: true, message: "Check this", date: "25/10/2025" },
-    { author: "Max", seen: false, message: "Ok", date: "27/10/2025" },
-    { author: "Lia", seen: true, message: "Thanks!", date: "29/10/2025" },
-    { author: "Max", seen: false, message: "Nice", date: "26/10/2025" },
-    { author: "Lia", seen: true, message: "Done", date: "31/10/2025" },
-    { author: "Max", seen: false, message: "Sure", date: "24/10/2025" },
-    { author: "Lia", seen: true, message: "Yep", date: "23/10/2025" },
-    { author: "Max", seen: false, message: "Later", date: "22/10/2025" },
-    { author: "Lia", seen: true, message: "Good", date: "21/10/2025" },
-    { author: "Max", seen: false, message: "Wait", date: "20/10/2025" },
-    { author: "Lia", seen: true, message: "Here", date: "19/10/2025" },
-  ];
+  const messages = selectedChat.messages;
 
   return (
     <div className="openChat flex flex-col w-[70%] h-screen">
@@ -73,7 +52,7 @@ export default function OpenChat({ selectedChat }) {
                 </div>
               ))}
 
-              <div className="sticky bottom-4 mb-4 flex w-full bg-white px-4 py-2 rounded-lg shadow-lg">
+              <div className="mt-auto sticky bottom-4 mb-4 flex w-full bg-white px-4 py-2 rounded-lg shadow-lg">
                 <input type="text" className="w-full" />
               </div>
             </>

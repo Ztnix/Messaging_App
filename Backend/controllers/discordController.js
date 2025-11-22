@@ -76,11 +76,39 @@ async function getChats(req, res, next) {
           some: { id: userId },
         },
       },
+      include: {
+        users: true,
+        messages: true,
+      },
     });
     res.json({ chats });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to fetch Chats" });
+  }
+}
+
+async function newChat(req, res, next) {
+  const target = req.body.targetUser;
+  const user = req.user;
+  try {
+    const chat = await prisma.chat.create({
+      data: {
+        title: "filler",
+        content: "filler",
+        users: {
+          connect: [{ id: user.id }, { id: target.id }],
+        },
+      },
+      include: {
+        users: true,
+      },
+    });
+
+    return res.status(201).json({ success: true, redirect: "/" });
+  } catch (error) {
+    console.error(error);
+    next(error);
   }
 }
 
@@ -90,4 +118,5 @@ module.exports = {
   setUser,
   getUsers,
   getChats,
+  newChat,
 };
