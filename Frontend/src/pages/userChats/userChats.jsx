@@ -1,44 +1,14 @@
 import profDefImg from "../../assets/profDef.jpg";
-import { useEffect, useState } from "react";
 import ContainerLoadingSpinner from "../../components/ui/containerLoadingSpinner";
 
 /* eslint-disable no-unused-vars */
 
-export default function UserChats({ setOpenTab, setSelectedChat }) {
-  const [msg, setMsg] = useState(null);
-  const [chats, setChats] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  async function loadUsers() {
-    setMsg(null);
-    setLoading(true);
-    try {
-      const res = await fetch(`http://localhost:3000/getChats`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setChats(null);
-        setLoading(false);
-        setMsg(data?.errors || data?.error || "Could not fetch chats");
-        return;
-      }
-      setChats(data.chats);
-    } catch (e) {
-      console.log(e);
-      setChats(null);
-      setMsg("Network error");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  useEffect(() => {
-    loadUsers();
-  }, []);
-
+export default function UserChats({
+  setOpenTab,
+  setSelectedChat,
+  loading,
+  chats,
+}) {
   if (loading)
     return (
       <div className="filler w-[30%] h-screen">

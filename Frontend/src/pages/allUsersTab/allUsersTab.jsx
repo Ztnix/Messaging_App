@@ -1,42 +1,14 @@
 import profDefImg from "../../assets/profDef.jpg";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import ContainerLoadingSpinner from "../../components/ui/containerLoadingSpinner";
 import { useAuth } from "../../hooks/useAuth";
-/* eslint-disable no-unused-vars */
 
-export default function AllUsersTab({ setOpenTab }) {
+export default function AllUsersTab({
+  setOpenTab,
+  handleUserPick,
+  loading,
+  users,
+}) {
   const { user } = useAuth();
-  const [msg, setMsg] = useState(null);
-  const [users, setUsers] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const nav = useNavigate();
-
-  async function loadUsers() {
-    setMsg(null);
-    setLoading(true);
-    try {
-      const res = await fetch(`http://localhost:3000/getUsers`);
-      const data = await res.json();
-      if (!res.ok) {
-        setUsers(null);
-        setLoading(false);
-        setMsg(data?.errors || data?.error || "Could not fetch users");
-        return;
-      }
-      setUsers(data.users);
-    } catch (e) {
-      console.log(e);
-      setUsers(null);
-      setMsg("Network error");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  useEffect(() => {
-    loadUsers();
-  }, []);
 
   if (loading)
     return (
@@ -60,6 +32,7 @@ export default function AllUsersTab({ setOpenTab }) {
               <div
                 key={i}
                 className="userChat w-full flex  p-4  border-b gap-3 max-w-full"
+                onClick={() => handleUserPick(u)}
               >
                 <img
                   className="userProfile w-12 aspect-square flex justify-center items-center rounded-full"
