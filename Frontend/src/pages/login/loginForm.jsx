@@ -34,7 +34,7 @@ export default function Login() {
         return;
       }
       setUser(body.user);
-      navigate(body.redirect || "/home");
+      navigate(body.redirect || "/");
     } catch (err) {
       console.log(err);
       setMsg("Network error");

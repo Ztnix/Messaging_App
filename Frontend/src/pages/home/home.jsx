@@ -75,6 +75,11 @@ export default function HomeScreen() {
         return;
       }
       setChats(data.chats);
+
+      if (selectedChat) {
+        const updated = data.chats.find((c) => c.id === selectedChat.id);
+        setSelectedChat(updated);
+      }
     } catch (e) {
       console.log(e);
       setChats(null);
@@ -112,7 +117,10 @@ export default function HomeScreen() {
         {createMode ? (
           <NewChat targetUser={targetUser}></NewChat>
         ) : (
-          <OpenChat selectedChat={selectedChat}></OpenChat>
+          <OpenChat
+            selectedChat={selectedChat}
+            refreshChats={loadChats}
+          ></OpenChat>
         )}
       </div>
     </div>

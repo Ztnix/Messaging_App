@@ -35,23 +35,25 @@ export default function UserChats({
                 className="userProfile w-12 aspect-square flex justify-center items-center rounded-full"
                 src={profDefImg}
               />
-              <div className="userChatContent flex flex-1 flex-col">
-                <div className="userChatTop flex w-full justify-between">
+              <div className="userChatContent flex flex-1 flex-col justify-center">
+                <div className="userChatTop flex w-full justify-between ">
                   <div> {chat.users[1].username}</div>
-                  <div> {chat.date}</div>
+                  {/* <div> {chat.date}</div> */}
                 </div>
-                <div className="userChatBottom flex w-full justify-between">
-                  <div className="text-gray-400 truncate w-70">
-                    {chat.message}
+                {chat.messages.length > 0 && (
+                  <div className="userChatBottom flex w-full justify-between">
+                    <div className="text-gray-400 truncate w-70">
+                      {chat.messages[0].content}
+                    </div>
+                    <div>
+                      {chat.seen ? (
+                        <div className="text-blue-400">✓✓</div>
+                      ) : (
+                        <div className="text-gray-400">✓✓</div>
+                      )}
+                    </div>
                   </div>
-                  <div>
-                    {chat.seen ? (
-                      <div className="text-blue-400">✓✓</div>
-                    ) : (
-                      <div className="text-gray-400">✓✓</div>
-                    )}
-                  </div>
-                </div>
+                )}
               </div>
             </div>
           ))

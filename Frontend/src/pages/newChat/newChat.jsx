@@ -34,7 +34,7 @@ export default function NewChat({ targetUser }) {
         return;
       }
 
-      navigate(body.redirect || "/home");
+      navigate(body.redirect || "/");
     } catch (err) {
       console.log(err);
       setMsg("Network error");
@@ -51,7 +51,7 @@ export default function NewChat({ targetUser }) {
           />
         </div>
         <div className="topChatContent flex flex-1 flex-col justify-center">
-          <div className="text-gray-400 text-[.85rem]">
+          <div className="text-black tracking-wide font-bold text-[.85rem]">
             {targetUser.username}
           </div>
         </div>

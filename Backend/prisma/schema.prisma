@@ -18,8 +18,6 @@ model User {
 
 model Chat {
   id         String    @id @default(uuid())
-  title      String    @unique
-  content    String
   created_at DateTime  @default(now())
   users      User[]
   messages   Message[]

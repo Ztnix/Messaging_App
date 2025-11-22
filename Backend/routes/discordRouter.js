@@ -18,8 +18,8 @@ discordRouter.post(
       .matches(/[!@#$%^&*()_\-+=[\]{};':"\\|,.<>/?]/)
       .withMessage("Password must contain at least one special character"),
     check("username")
-      .isLength({ min: 4 })
-      .withMessage("Username must be at least 4 chracters long"),
+      .isLength({ min: 3 })
+      .withMessage("Username must be at least 3 chracters long"),
     check("passwordConfirm").custom((passwordConfirm, { req }) => {
       if (passwordConfirm !== req.body.password) {
         throw new Error("Passwords do not match");
@@ -56,5 +56,6 @@ discordRouter.get("/getUsers", discordController.getUsers);
 discordRouter.get("/getChats", discordController.getChats);
 
 discordRouter.post("/newChat", discordController.newChat);
+discordRouter.post("/newMessage", discordController.newMessage);
 
 module.exports = discordRouter;

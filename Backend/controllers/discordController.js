@@ -13,7 +13,7 @@ async function signUp(req, res, next) {
       },
       select: { id: true, username: true },
     });
-    return res.status(201).json({ success: true, user, redirect: "/home" });
+    return res.status(201).json({ success: true, user, redirect: "/" });
   } catch (error) {
     console.error(error);
     next(error);
@@ -78,7 +78,9 @@ async function getChats(req, res, next) {
       },
       include: {
         users: true,
-        messages: true,
+        messages: {
+          orderBy: { created_at: "desc" },
+        },
       },
     });
     res.json({ chats });
@@ -91,21 +93,57 @@ async function getChats(req, res, next) {
 async function newChat(req, res, next) {
   const target = req.body.targetUser;
   const user = req.user;
+  const initialMessage = req.body.form.initialMessage;
   try {
     const chat = await prisma.chat.create({
       data: {
-        title: "filler",
-        content: "filler",
         users: {
           connect: [{ id: user.id }, { id: target.id }],
+        },
+        messages: {
+          create: [
+            {
+              content: initialMessage,
+              user: { connect: { id: user.id } },
+            },
+          ],
         },
       },
       include: {
         users: true,
+        messages: { include: { user: true } },
       },
     });
 
-    return res.status(201).json({ success: true, redirect: "/" });
+    return res.status(201).json({ success: true, redirect: "/home" });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+}
+
+async function newMessage(req, res, next) {
+  const messageAuthorId = req.user.id;
+  const chatId = req.body.selectedChat.id;
+  const messageContent = req.body.form.message;
+
+  if (!messageAuthorId)
+    return res.status(401).json({ error: "Not authenticated" });
+  if (!chatId || !messageContent)
+    return res
+      .status(400)
+      .json({ error: "chatId and message content required" });
+
+  try {
+    const message = await prisma.message.create({
+      data: {
+        content: messageContent,
+        chat: { connect: { id: chatId } },
+        user: { connect: { id: messageAuthorId } },
+      },
+      include: { user: true },
+    });
+    return res.status(201).json({ success: true });
   } catch (error) {
     console.error(error);
     next(error);
@@ -119,4 +157,5 @@ module.exports = {
   getUsers,
   getChats,
   newChat,
+  newMessage,
 };
