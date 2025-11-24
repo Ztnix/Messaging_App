@@ -5,7 +5,8 @@ import AllUsersTab from "../allUsersTab/allUsersTab";
 import NewChat from "../newChat/newChat";
 import { useState, useEffect } from "react";
 import { useAuth } from "../../hooks/useAuth";
-/* eslint-disable no-unused-vars */
+/* eslint-disable no-unused-vars*/
+/* eslint-disable react-hooks/exhaustive-deps*/
 
 export default function HomeScreen() {
   const [msg, setMsg] = useState(null);

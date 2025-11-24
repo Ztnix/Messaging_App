@@ -26,6 +26,7 @@ model Chat {
 model Message {
   id         String   @id @default(uuid())
   content    String
+  read       Boolean
   chat       Chat?    @relation(fields: [chatId], references: [id])
   chatId     String?
   user       User     @relation(fields: [userId], references: [id])

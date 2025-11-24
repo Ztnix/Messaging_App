@@ -1,20 +1,20 @@
 import profDefImg from "../../assets/profDef.jpg";
 import disImg from "../../assets/dis.png";
 import { useAuth } from "../../hooks/useAuth";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 /* eslint-disable no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps*/
 
 export default function OpenChat({ selectedChat, refreshChats }) {
   let selected;
   let messages;
+  const { user } = useAuth();
 
   if (selectedChat) {
-    selected = selectedChat.users[1];
+    selected = selectedChat.users.find((u) => u.id !== user.id);
     messages = selectedChat.messages;
   }
-
-  const { user } = useAuth();
 
   const [form, setForm] = useState({
     message: "",
@@ -53,6 +53,36 @@ export default function OpenChat({ selectedChat, refreshChats }) {
       setMsg("Network error");
     }
   }
+
+  async function updateReadMessages() {
+    setMsg(null);
+    const otherUser = selectedChat.users.find((u) => u.id !== user.id);
+    const unreadMessages = selectedChat.messages.filter(
+      (mes) => !mes.read && mes.userId === otherUser.id
+    );
+    const unreadMessagesId = unreadMessages.map((umes) => umes.id);
+    try {
+      const payload = { unreadMessagesId };
+      const res = await fetch(`http://localhost:3000/updateReadMessages`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        setMsg("Could not update read status");
+        return;
+      }
+    } catch (e) {
+      console.log(e);
+      setMsg("Network error");
+    }
+  }
+
+  useEffect(() => {
+    updateReadMessages();
+  }, [selectedChat]);
 
   return (
     <div className="openChat flex flex-col w-[70%] h-screen">
@@ -99,7 +129,7 @@ export default function OpenChat({ selectedChat, refreshChats }) {
                   <div className="chatMsgMain bg-[#1447e6] text-white p-2 rounded-lg flex justify-between gap-2">
                     <div className="content">{msg.content}</div>
                     <div className="seen">
-                      {msg.seen ? (
+                      {msg.read ? (
                         <div className="text-green-400">✓✓</div>
                       ) : (
                         <div className="text-gray-400">✓✓</div>

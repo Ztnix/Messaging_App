@@ -1,5 +1,6 @@
 import profDefImg from "../../assets/profDef.jpg";
 import ContainerLoadingSpinner from "../../components/ui/containerLoadingSpinner";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function UserChats({
   setOpenTab,
@@ -7,6 +8,8 @@ export default function UserChats({
   loading,
   chats,
 }) {
+  const { user } = useAuth();
+
   if (loading)
     return (
       <div className="filler w-[30%] h-screen">
@@ -37,7 +40,10 @@ export default function UserChats({
               />
               <div className="userChatContent flex flex-1 flex-col justify-center">
                 <div className="userChatTop flex w-full justify-between ">
-                  <div> {chat.users[1].username}</div>
+                  <div className="font-bold">
+                    {" "}
+                    {chat.users.find((u) => u.id !== user.id).username}
+                  </div>
                   {/* <div> {chat.date}</div> */}
                 </div>
                 {chat.messages.length > 0 && (
@@ -46,8 +52,8 @@ export default function UserChats({
                       {chat.messages[0].content}
                     </div>
                     <div>
-                      {chat.seen ? (
-                        <div className="text-blue-400">✓✓</div>
+                      {chat.messages[0].read ? (
+                        <div className="text-green-400">✓✓</div>
                       ) : (
                         <div className="text-gray-400">✓✓</div>
                       )}

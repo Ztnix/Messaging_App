@@ -105,6 +105,7 @@ async function newChat(req, res, next) {
             {
               content: initialMessage,
               user: { connect: { id: user.id } },
+              read: false,
             },
           ],
         },
@@ -140,9 +141,27 @@ async function newMessage(req, res, next) {
         content: messageContent,
         chat: { connect: { id: chatId } },
         user: { connect: { id: messageAuthorId } },
+        read: false,
       },
       include: { user: true },
     });
+    return res.status(201).json({ success: true });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+}
+
+async function updateReadMessages(req, res, next) {
+  const unreadMessagesId = req.body.unreadMessagesId;
+  try {
+    const updatededMessages = await prisma.message.updateMany({
+      where: {
+        id: { in: unreadMessagesId },
+      },
+      data: { read: true },
+    });
+
     return res.status(201).json({ success: true });
   } catch (error) {
     console.error(error);
@@ -158,4 +177,5 @@ module.exports = {
   getChats,
   newChat,
   newMessage,
+  updateReadMessages,
 };
